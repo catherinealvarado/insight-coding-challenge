@@ -35,8 +35,6 @@ relationshipGraph.prototype.checkIfNodeExists = function(node){
   }
 }
 
-
-
 relationshipGraph.prototype.processRelationship = function(pay1,receive2,total){
   if (this.checkIfNodeExists(pay1) === false ){
     this.addNode(pay1)
@@ -46,7 +44,6 @@ relationshipGraph.prototype.processRelationship = function(pay1,receive2,total){
   }
   this.addEdge(pay1,receive2,total)
 }
-
 
 function createGraph(){
   var graph = new relationshipGraph()
@@ -93,7 +90,7 @@ function createGraph(){
     for(var id in transactions){
       payments[id] = sumPayments(transactions[id])
     }
-    fs.appendFileSync("../paymo_input/GraphData.txt", JSON.stringify(graph), "UTF-8",{'flags': 'a'});
+    fs.writeFile('../paymo_input/transactionsData.json', JSON.stringify(graph["transactions"], null, 2));
   })
 }
 createGraph()
