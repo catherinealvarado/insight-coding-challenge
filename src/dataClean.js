@@ -1,7 +1,5 @@
-//lets create a graph as a set of sets!! :)
-//business plan ideas -- > think about speading growth of business if node no exists then recommend what kind of people have the best connected network?
-var fs = require('fs');
-var readline = require('readline');
+var fs = require('fs'),readline = require('readline');
+module.exports = extractUserData;
 
 function relationshipGraph(){
   this.transactions = {};
@@ -20,9 +18,9 @@ relationshipGraph.prototype.addEdge = function(pay1,receive2,amount){
   else{
     friendsSet[receive2] = amount
   }
-  var addreceiver = this.transactions[receive2]
-  if (addreceiver[pay1] === undefined){
-    addreceiver[pay1] = 0
+  var receiverFriends = this.transactions[receive2]
+  if (receiverFriends[pay1] === undefined){
+    receiverFriends[pay1] = 0
   }
 }
 
@@ -45,33 +43,32 @@ relationshipGraph.prototype.processRelationship = function(pay1,receive2,total){
   this.addEdge(pay1,receive2,total)
 }
 
+function extractUserData(str){
+  var regex = /\d{4}?\-\d{2}?-\d{2}?\s\d{2}?\:\d{2}?\:\d{2}?\,\s\d+\,\s\d+\,\s\d+\.{0,}\d+\,/g;
+  var numRegex = /\,\s((\d+\.{0,}\d+)|\d+)/g;
+  if (str.match(regex) !== null){
+    var trans = str.match(numRegex)
+    trans.forEach(function(info,index){
+      trans[index] = info.substring(2)
+    });
+    trans[2] = parseFloat(trans[2])
+    return trans;
+  }
+  else{
+    return;
+  }
+}
+
+function sumPayments(obj){
+  var total = 0;
+  for (var id in obj){
+    total = parseFloat((total + obj[id]).toFixed(2))
+  }
+  return total;
+}
+
 function createGraph(){
   var graph = new relationshipGraph()
-
-  function extractUserData(str){
-    var regex = /\d{4}?\-\d{2}?-\d{2}?\s\d{2}?\:\d{2}?\:\d{2}?\,\s\d+\,\s\d+\,\s\d+\.{0,}\d+\,/g;
-    var numRegex = /\,\s((\d+\.{0,}\d+)|\d+)/g;
-    if (str.match(regex) !== null){
-      var trans = str.match(numRegex)
-      trans.forEach(function(info,index){
-        trans[index] = info.substring(2)
-      });
-      trans[2] = parseFloat(trans[2])
-      return trans;
-    }
-    else{
-      return;
-    }
-  }
-
-  function sumPayments(obj){
-    var total = 0;
-    for (var id in obj){
-      total = parseFloat((total + obj[id]).toFixed(2))
-    }
-    return total;
-  }
-
   var rd = readline.createInterface({
     input: fs.createReadStream('../paymo_input/batch_payment.csv'),
     output: process.stdout,
@@ -84,13 +81,13 @@ function createGraph(){
     }
   });
   rd.on('close',function(){
-    // graph["totalPayments"] = {};
-    var payments = graph["totalPayments"]
     var transactions = graph["transactions"];
+    var totalPaidOut = graph["totalPayments"]
+    //adding up all the transactions for each user and inserting into totalPaidOut
     for(var id in transactions){
-      payments[id] = sumPayments(transactions[id])
+      totalPaidOut[id] = sumPayments(transactions[id])
     }
-    fs.writeFile('../paymo_input/transactionsData.json', JSON.stringify(graph["transactions"], null, 2));
+    fs.writeFile('../paymo_input/transactionsGraph.json', JSON.stringify(graph["transactions"], null, 2));
   })
 }
 createGraph()
