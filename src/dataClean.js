@@ -1,6 +1,8 @@
 var fs = require('fs'),readline = require('readline');
 module.exports = extractUserData;
 
+
+
 function relationshipGraph(){
   this.transactions = {};
   this.totalPayments = {}
@@ -70,7 +72,7 @@ function sumPayments(obj){
 function createGraph(){
   var graph = new relationshipGraph()
   var rd = readline.createInterface({
-    input: fs.createReadStream('../paymo_input/batch_payment.csv'),
+    input: fs.createReadStream('./paymo_input/batch_payment.txt'),
     output: process.stdout,
     terminal: false
   });
@@ -87,7 +89,7 @@ function createGraph(){
     for(var id in transactions){
       totalPaidOut[id] = sumPayments(transactions[id])
     }
-    fs.writeFile('../paymo_input/transactionsGraph.json', JSON.stringify(graph["transactions"], null, 2));
+    fs.writeFile('./paymo_input/transactionsGraph.json', JSON.stringify(graph["transactions"], null, 2));
   })
 }
 createGraph()
