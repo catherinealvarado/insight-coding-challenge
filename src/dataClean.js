@@ -1,17 +1,27 @@
+//fs and readline are libraries that read and write to files.
 var fs = require('fs'),readline = require('readline');
+//extractUserData is a function defined in this file and is exported to be used again in processingPayments.js
 module.exports = extractUserData;
 
-
-
+//sets up a graph that is a set of sets
+//transactions - an object that shows all the transactions each user has made with others
+//total Payments - the sum of all the payments each user has made to friends
+//ex) if A paid B $30, then we get
+//{transactions: {"A":{"B":30},"B":{"A":0}},totalPayments:{"A":30,"B":0}}
 function relationshipGraph(){
   this.transactions = {};
   this.totalPayments = {}
 }
 
+//adds a new object to the set of transactions
+//the key of the object is the userid and the value is an empty set
 relationshipGraph.prototype.addNode = function(node){
   this.transactions[node] = {}
 }
 
+//creates a relationship between two people in the graph
+//adds an object with key pay1 into the transactions of receive2
+//and add an object with key receive2 into the transactions for pay1
 relationshipGraph.prototype.addEdge = function(pay1,receive2,amount){
   var friendsSet = this.transactions[pay1]
   if (friendsSet[receive2]){
@@ -26,6 +36,7 @@ relationshipGraph.prototype.addEdge = function(pay1,receive2,amount){
   }
 }
 
+//checks if a userid is in the transactions object
 relationshipGraph.prototype.checkIfNodeExists = function(node){
   if (this.transactions[node]){
     return true
@@ -35,6 +46,9 @@ relationshipGraph.prototype.checkIfNodeExists = function(node){
   }
 }
 
+//checks to see if nodes pay1 and pay2 exist
+//adds an object to transactions if the object is not already in transactions
+//then adds an edge between pay1 and receive2
 relationshipGraph.prototype.processRelationship = function(pay1,receive2,total){
   if (this.checkIfNodeExists(pay1) === false ){
     this.addNode(pay1)
@@ -45,6 +59,9 @@ relationshipGraph.prototype.processRelationship = function(pay1,receive2,total){
   this.addEdge(pay1,receive2,total)
 }
 
+//this function checks to see that str is correctly formatted as transaction
+//meaning that str contains a time stamp, id1, id2, and amount paid
+//it outputs an array with id1,id2, and total amount paid
 function extractUserData(str){
   var regex = /\d{4}?\-\d{2}?-\d{2}?\s\d{2}?\:\d{2}?\:\d{2}?\,\s\d+\,\s\d+\,\s\d+\.{0,}\d+\,/g;
   var numRegex = /\,\s((\d+\.{0,}\d+)|\d+)/g;
@@ -61,6 +78,7 @@ function extractUserData(str){
   }
 }
 
+//adds all the values in an object
 function sumPayments(obj){
   var total = 0;
   for (var id in obj){
@@ -69,6 +87,8 @@ function sumPayments(obj){
   return total;
 }
 
+//processes batch_payment.txt line by line
+//creates a graph with all the transactions made and saves the graph into a JSON file
 function createGraph(){
   var graph = new relationshipGraph()
   var rd = readline.createInterface({
@@ -78,7 +98,7 @@ function createGraph(){
   });
   rd.on('line', function(line) {
     var userData = extractUserData(line)
-    if (userData !== undefined){
+    if (userData !== undefined){ //if the line is valid, meaning the payment information is correctly formatted
       graph.processRelationship(userData[0],userData[1],userData[2]);
     }
   });
