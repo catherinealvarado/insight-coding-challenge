@@ -1,3 +1,7 @@
-# insight-challenge
+#Additional Information for the Insight Coding Challenge
 
-Add in that used node.js!!!
+In order to run my code node.js is needed. I call node in my run.sh file so it is necessary to have it installed.
+
+When I wrote my code, I assumed that the graph will fit into memory. I cleaned and processed the data from batch_payment.txt and represented the payment data as a graph. The graph I am using is made up of a set of sets. Where each node represents a user and all the transactions that user has had where he or she paid/received money from friends.
+
+It is important to note that in my dataClean.js file I wrote a function called relationshipGraph() to represent my graph. My final representation of the graph includes {transactions:{...}, totalPayments:{...}}. I use transactions in processingPayments.js to determine what transactions are fraudulent, but I do not use totalPayments. The key totalPayments in my graph represents the total amount of money each user paid out to friends. I thought totalPayments would be interesting information for PayMo to know. For example, PayMo could keep track of how much each user is spending and partner with a credit card company to advertise the card to users who spend over a certain amount. PayMo could incentivize users to get a credit card with the company they are partnering with by giving these users additional perks. PayMo would make a substantial profit off successfully advertising credit cards to users who spend a lot of money and sometimes borrow from friends.
