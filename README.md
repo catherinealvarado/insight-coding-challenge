@@ -2,7 +2,8 @@
 
 In order to run my code node.js is needed. I call node in my run.sh file so it is necessary to have it installed.
 
-When I wrote my code, I assumed that the graph will fit into memory. I cleaned and processed the data from batch_payment.txt and represented the payment data as a graph. The graph I am using is made up of a set of two sets-an object with two objects inside. The first object is called "transactions" and the second object is called "totalPayments".  
+##Dataset size assumption:
+When I wrote my code, I assumed that the graph created from the batch_payment dataset would fit into my computer's memory. I cleaned and processed the data from batch_payment.txt and represented the payment data as a graph. The graph I am using is made up of a set of two sets-an object with two objects inside. The first object is called "transactions" and the second object is called "totalPayments".  
 
 This is an example of what my graph looks like:
 graph = {
@@ -23,3 +24,8 @@ Here are some ways this totalPayments could be useful:
 1. PayMo could keep track of how much each user is spending in total and partner with a credit card company to advertise a credit card to users who spend over a certain amount. In order to convince users to take on the credit card, PayMo could provide incentives for these users. PayMo would make a substantial profit off successfully advertising credit cards to users who spend a lot of money and borrow from friends.
 
 2. Users who signed up to PayMo with a debit card could get a warning when they are about to run out of money to make payments.  
+
+##Dealing with a massive dataset that don't not fit into memory:
+If I was given a massive dataset that needed to become a graph and did not fit into my computer's memory, then I would use Spark GraphX. Spark would divide my graph among multiple computers in a cluster of computers and store my data into each computer's memory (RAM), thereby making it easier to learn from and access my graph.
+
+With GraphX I can efficiently deal with a massive data set and use graph algorithms to learn from my data. Since GraphX is an in-memory processing system and Spark expects a distributed storage, then I would use S3 to store my graph in distributed storage.
