@@ -25,7 +25,7 @@ Here are some ways this totalPayments could be useful:
 
 2. Users who signed up to PayMo with a debit card could get a warning when they are about to run out of money to make payments.  
 
-##Dealing with a massive dataset that don't not fit into memory:
-If I was given a massive dataset that needed to become a graph and did not fit into my computer's memory, then I would use Spark GraphX. Spark would divide my graph among multiple computers in a cluster of computers and store my data into each computer's memory (RAM), thereby making it easier to learn from and access my graph.
+##Dealing with a massive dataset that does not fit into memory:
+If I was given a massive dataset that needed to become a graph and did not fit into my computer's memory, then I would use Spark GraphX. Spark would divide my graph among multiple computers in a cluster of computers and store my data into each computer's memory (RAM), thereby making it easier to learn from and access my graph. Since GraphX is an in-memory processing system and Spark expects a distributed storage, then I would use S3 to store my graph in distributed storage.
 
-With GraphX I can efficiently deal with a massive data set and use graph algorithms to learn from my data. Since GraphX is an in-memory processing system and Spark expects a distributed storage, then I would use S3 to store my graph in distributed storage.
+With Spark GraphX I can efficiently deal with a massive data set and use graph algorithms to learn from and work with my data. 
